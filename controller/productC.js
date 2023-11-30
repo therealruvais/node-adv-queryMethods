@@ -1,10 +1,5 @@
 const Product = require("../model/productM");
 
-const getAllProductsStatic = async (req, res, next) => {
-  const products = await Product.find({})
-  res.status(200).json({ products });
-};
-
 const getAllProducts = async (req, res, next) => {
   const { featured, company, name, sort, select, numericValues } = req.query;
   const queryObj = {};
@@ -12,7 +7,7 @@ const getAllProducts = async (req, res, next) => {
     queryObj.featured = featured === "true" ? true : false;
   }
   if (company) {
-    queryObj.company = company;
+    queryObj.company = { $regex: company, $options: "i" };
   }
   if (name) {
     queryObj.name = { $regex: name, $options: "i" };
@@ -62,5 +57,4 @@ const getAllProducts = async (req, res, next) => {
 
 module.exports = {
   getAllProducts,
-  getAllProductsStatic,
 };
